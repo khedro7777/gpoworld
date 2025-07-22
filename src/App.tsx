@@ -35,6 +35,7 @@ import Portfolio from "./pages/Portfolio";
 import Parties from "./pages/Parties";
 import Automation from "./pages/Automation";
 import Points from "./pages/Points";
+import AIAgents from "./pages/AIAgents";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -79,6 +80,7 @@ function App() {
                 <Route path="/parties" element={<Parties />} />
                 <Route path="/automation" element={<Automation />} />
                 <Route path="/points" element={<Points />} />
+                <Route path="/ai-agents" element={<AIAgents />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

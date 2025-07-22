@@ -13,7 +13,8 @@ import {
   Package, 
   Gavel, 
   FileText, 
-  Handshake 
+  Handshake,
+  Bot
 } from 'lucide-react';
 
 const PortalsGrid = () => {
@@ -269,6 +270,37 @@ const PortalsGrid = () => {
           status: 'قيد المراجعة',
           rating: 4.4,
           category: 'عقارات'
+        }
+      ]
+    },
+    {
+      id: 'ai-agents',
+      title: 'وكلاء الذكاء الاصطناعي',
+      description: 'استخدم وكلاء الذكاء الاصطناعي لأتمتة عملياتك',
+      icon: Bot,
+      route: '/ai-agents',
+      kycRequired: true,
+      pointsRequired: true,
+      activeGroups: [
+        {
+          id: '16',
+          name: 'وكيل التفاوض الذكي',
+          description: 'وكيل ذكي متخصص في التفاوض التجاري',
+          phase: 'نشط',
+          memberCount: 25,
+          status: 'نشط',
+          rating: 4.8,
+          category: 'ذكاء اصطناعي'
+        },
+        {
+          id: '17',
+          name: 'وكيل تحليل السوق',
+          description: 'يحلل اتجاهات السوق ويقدم التوصيات',
+          phase: 'نشط',
+          memberCount: 18,
+          status: 'نشط',
+          rating: 4.9,
+          category: 'تحليل'
         }
       ]
     },
