@@ -14,10 +14,23 @@ import {
   Gavel, 
   FileText, 
   Handshake,
-  Bot
+  Bot,
+  MessageSquare
 } from 'lucide-react';
 
-const PortalsGrid = () => {
+interface SearchFilters {
+  query: string;
+  gateway: string;
+  groupType: string;
+  country: string;
+  platformService: string;
+}
+
+interface PortalsGridProps {
+  searchFilters?: SearchFilters;
+}
+
+const PortalsGrid: React.FC<PortalsGridProps> = ({ searchFilters }) => {
   const portals = [
     {
       id: 'cooperative-purchasing',
@@ -322,25 +335,96 @@ const PortalsGrid = () => {
           category: 'تجاري'
         }
       ]
+    },
+    {
+      id: 'inbox-outbox',
+      title: 'نظام الرسائل',
+      description: 'إدارة الرسائل الواردة والصادرة والتواصل مع الأعضاء',
+      icon: MessageSquare,
+      route: '/inbox-outbox',
+      kycRequired: false,
+      pointsRequired: false,
+      activeGroups: [
+        {
+          id: '16',
+          name: 'رسائل جديدة',
+          description: 'رسائل واردة جديدة تحتاج للمراجعة',
+          phase: 'نشط',
+          memberCount: 15,
+          status: 'نشط',
+          rating: 4.8,
+          category: 'تواصل'
+        },
+        {
+          id: '17',
+          name: 'رسائل مهمة',
+          description: 'رسائل ذات أولوية عالية',
+          phase: 'عاجل',
+          memberCount: 8,
+          status: 'عاجل',
+          rating: 4.9,
+          category: 'إدارة'
+        }
+      ]
     }
   ];
 
+  // فلترة البوابات حسب معايير البحث
+  const filteredPortals = portals.filter(portal => {
+    if (!searchFilters) return true;
+    
+    const { query, gateway, groupType } = searchFilters;
+    
+    // فلترة حسب النص
+    if (query && !portal.title.includes(query) && !portal.description.includes(query)) {
+      return false;
+    }
+    
+    // فلترة حسب البوابة
+    if (gateway && portal.id !== gateway) {
+      return false;
+    }
+    
+    // فلترة حسب نوع المجموعة
+    if (groupType && !portal.activeGroups.some(group => 
+      (groupType === 'seeking-members' && group.status === 'البحث عن أعضاء') ||
+      (groupType === 'seeking-suppliers' && group.title.includes('مورد')) ||
+      (groupType === 'seeking-freelancers' && group.title.includes('مستقل'))
+    )) {
+      return false;
+    }
+    
+    return true;
+  });
+
   return (
-    <div className="space-y-8">
-      <div className="text-center">
+    <div className="mb-16" dir="rtl">
+      <div className="text-center mb-12">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
           بواباتنا الرئيسية
         </h2>
         <p className="text-gray-600 max-w-2xl mx-auto">
           اختر البوابة التي تناسب احتياجاتك وانضم إلى المجموعات النشطة أو أنشئ مجموعتك الخاصة
         </p>
+        {searchFilters && (searchFilters.query || searchFilters.gateway || searchFilters.groupType) && (
+          <p className="text-sm text-blue-600 mt-2">
+            عرض {filteredPortals.length} من {portals.length} بوابة حسب معايير البحث
+          </p>
+        )}
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {portals.map((portal) => (
+        {filteredPortals.map((portal) => (
           <PortalCard key={portal.id} {...portal} />
         ))}
       </div>
+      
+      {filteredPortals.length === 0 && searchFilters && (searchFilters.query || searchFilters.gateway || searchFilters.groupType) && (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">لم يتم العثور على بوابات تطابق معايير البحث</p>
+          <p className="text-gray-400 text-sm mt-2">جرب تعديل معايير البحث أو مسح الفلاتر</p>
+        </div>
+      )}
     </div>
   );
 };

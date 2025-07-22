@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import EnhancedHeader from '@/components/layout/EnhancedHeader';
 import Sidebar from '@/components/layout/Sidebar';
 import PortalsGrid from '@/components/home/PortalsGrid';
+import SmartSearch from '@/components/home/SmartSearch';
 import Footer from '@/components/home/Footer';
 import { 
   Users, 
@@ -27,6 +28,18 @@ const Index = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchFilters, setSearchFilters] = useState({
+    query: '',
+    gateway: '',
+    groupType: '',
+    country: '',
+    platformService: ''
+  });
+
+  const handleSearch = (filters: any) => {
+    setSearchFilters(filters);
+    console.log('البحث بالفلاتر:', filters);
+  };
 
   const stats = [
     {
@@ -209,9 +222,22 @@ const Index = () => {
           </div>
         </div>
 
+        {/* Smart Search Section */}
+        <div className="mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              البحث الذكي
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              استخدم أدوات البحث المتقدمة للعثور على المجموعات والفرص التي تناسب احتياجاتك
+            </p>
+          </div>
+          <SmartSearch onSearch={handleSearch} />
+        </div>
+
         {/* Main Portals Section */}
         <div className="mb-16">
-          <PortalsGrid />
+          <PortalsGrid searchFilters={searchFilters} />
         </div>
 
         {/* CTA Section */}
